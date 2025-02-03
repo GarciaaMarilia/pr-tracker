@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+* {
+ min-width: 0;
+}
+
+input {
+ color-scheme: dark;
+}
