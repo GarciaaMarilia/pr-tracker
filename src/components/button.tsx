@@ -7,10 +7,10 @@ const buttonVariants = tv({
 
  variants: {
   variant: {
-   primary: "bg-yellow-600 text-lime-950 hover:bg-yellow-700",
+   primary: "bg-yellow-600 text-zinc-900 hover:bg-yellow-700",
    secondary: "bg-zinc-800 text-zinc-200 hover:bg-zinc-700",
    list:
-    "bg-zinc-900 py-8 sm:h-16 rounded-xl flex shadow-shape gap-3 justify-start hover:bg-lime-300 hover:text-zinc-900",
+    "bg-zinc-900 sm:h-16 rounded-xl flex shadow-shape gap-3 justify-center hover:border hover:border-width-1 focus:bg-yellow-600 focus:text-zinc-900",
    danger:
     "bg-rose-800 hover:bg-rose-900 rounded-xl flex shadow-shape gap-3 justify-center",
    disabled: "bg-zinc-800 text-zinc-200",

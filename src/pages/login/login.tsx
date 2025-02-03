@@ -10,7 +10,7 @@ export function LoginPage() {
   navigate("/home");
  };
  return (
-  <div className="h-screen flex items-center justify-center ">
+  <div className="h-screen flex items-center justify-center">
    <div className="max-w-3xl w-full px-6 text-center space-y-10">
     <div className="flex flex-col items-center gap-3">
      <p className="text-4xl">Bienvenue sur PR Tracker</p>
