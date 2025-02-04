@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 
 import { Button } from "./button";
+import { PrDataProps, savePr } from "../services/save-pr-service";
 import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/types";
 
 interface ModalAddProps {
@@ -12,14 +13,38 @@ const exerciseMapping = {
  [Types.HALTERO]: Haltero,
  [Types.BENCHMARK]: Benchmark,
  [Types.GYM]: Gym,
- [Types.CARDIO]: [],
+ [Types.CARDIO]: Cardio,
 };
 
 export function ModalAdd({ onClose }: ModalAddProps) {
  const [typeToSaveSelected, setTypeToSaveSelected] = useState<Types>();
  const [exerciseToSaveSelected, setExerciseToSaveSelected] = useState<
-  Benchmark | Gym | Haltero
+  Benchmark | Gym | Haltero | Cardio
  >();
+ const [valueToSave, setValueToSave] = useState<string>();
+ const [dateToSave, setDateToSave] = useState<string>(new Date().toISOString());
+
+ const handleSavePr = async () => {
+  try {
+   if (
+    typeToSaveSelected &&
+    exerciseToSaveSelected &&
+    valueToSave &&
+    dateToSave
+   ) {
+    const prData: PrDataProps = {
+     type: typeToSaveSelected,
+     exercise: exerciseToSaveSelected,
+     value: valueToSave,
+     date: dateToSave,
+    };
+    const response = await savePr(prData);
+    return response;
+   }
+  } catch (error) {
+   console.error(error);
+  }
+ };
 
  const renderExerciseList = () => {
   const exercises: (Benchmark | Gym | Haltero | Cardio)[] =
@@ -71,6 +96,7 @@ export function ModalAdd({ onClose }: ModalAddProps) {
       type="text"
       className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
       placeholder="Entrez un nom"
+      onChange={(event) => setValueToSave(event.target.value)}
      />
     </div>
 
@@ -83,11 +109,13 @@ export function ModalAdd({ onClose }: ModalAddProps) {
       type="date"
       className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
       defaultValue={new Date().toISOString().split("T")[0]}
+      onChange={(event) => setDateToSave(event.target.value)}
      />
     </div>
    </div>
   );
  };
+
  return (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
    <div className="w-[60%] sm:h-[50%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
@@ -125,7 +153,7 @@ export function ModalAdd({ onClose }: ModalAddProps) {
     </div>
     {typeToSaveSelected && exerciseToSaveSelected && (
      <div className="flex items-center justify-center pt-5">
-      <Button>Enregistrer</Button>
+      <Button onClick={handleSavePr}>Enregistrer</Button>
      </div>
     )}
    </div>

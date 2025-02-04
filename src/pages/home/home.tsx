@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Eye } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 
 import { Button } from "../../components/button";
 import { ModalAdd } from "../../components/modal-add";
+import { listPr } from "../../services/list-ps-services";
 import { ModalGraph } from "../../components/modal-graph";
 import { Types, Benchmark, Gym, Haltero, Cardio } from "../../types/types";
 
@@ -11,6 +13,10 @@ export function HomePage() {
  const [modalToSaveIsOpen, setModalToSaveIsOpen] = useState<boolean>(false);
  const [modalProgressionIsOpen, setModalProgressionIsOpen] =
   useState<boolean>(false);
+ const [dataToPlot, setDataToPlot] = useState<
+  { date: string; value: string }[]
+ >([]);
+ const [loading, setLoading] = useState<boolean>(false);
 
  const selectType = (type: Types) => {
   setTypeToListSelected(type);
@@ -20,23 +26,41 @@ export function HomePage() {
   setModalToSaveIsOpen((prev) => !prev);
  };
 
- const handleModalProgression = (
+ const closeModalProgression = () => {
+  setModalProgressionIsOpen(false);
+ };
+
+ const handleModalProgression = async (
   exercise: Benchmark | Gym | Haltero | Cardio
  ) => {
-  console.log("aquiiii", exercise);
-  setModalProgressionIsOpen((prev) => !prev);
+  try {
+   if (typeToListSelected && exercise) {
+    setLoading(true);
+    const response = await listPr({ type: typeToListSelected, exercise });
+
+    if (response && response.prsResult.data) {
+     setDataToPlot(response.prsResult.data);
+    }
+    setModalProgressionIsOpen(true);
+   }
+  } catch (error) {
+   console.error(error);
+  } finally {
+   setLoading(false);
+  }
  };
 
  const exerciseMapping = {
   [Types.HALTERO]: Haltero,
   [Types.BENCHMARK]: Benchmark,
   [Types.GYM]: Gym,
-  [Types.CARDIO]: [],
+  [Types.CARDIO]: Cardio,
  };
 
  const renderExerciseList = () => {
-  const exercises: (Benchmark | Gym | Haltero | Cardio)[] =
-   exerciseMapping[typeToListSelected as Types] || [];
+  const exercises = Object.values(
+   exerciseMapping[typeToListSelected as Types] || {}
+  );
 
   return (
    <div className="flex flex-col space-y-3 sm:w-dvh max-h-[400px] overflow-y-scroll no-scrollbar">
@@ -46,8 +70,14 @@ export function HomePage() {
        <div key={index} className="flex flex-row justify-between">
         <p>{exercise}</p>
         <Button onClick={() => handleModalProgression(exercise)}>
-         <Eye className="sm:hidden" />
-         <p className="hidden sm:inline">Voir votre progression</p>
+         {loading ? (
+          <CircularProgress className="test-zinc-950" size={30} />
+         ) : (
+          <>
+           <Eye className="sm:hidden" />
+           <p className="hidden sm:inline">Voir votre progression</p>
+          </>
+         )}
         </Button>
        </div>
       );
@@ -88,14 +118,7 @@ export function HomePage() {
    {modalToSaveIsOpen && <ModalAdd onClose={handleModalToSave} />}
 
    {modalProgressionIsOpen && (
-    <ModalGraph
-     onClose={handleModalProgression}
-     data={[
-      { name: "Jan", value: 30 },
-      { name: "Fev", value: 45 },
-      { name: "Mar", value: 80 },
-     ]}
-    />
+    <ModalGraph onClose={closeModalProgression} data={dataToPlot} />
    )}
   </div>
  );

@@ -1,14 +1,46 @@
+import { get } from "lodash";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, KeyRound, User } from "lucide-react";
 
+import { api } from "../../lib/axios";
 import { Button } from "../../components/button";
-import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
  const navigate = useNavigate();
+ const [email, setEmail] = useState<string>("");
+ const [password, setPassword] = useState<string>("");
 
- const authenticate = () => {
-  navigate("/home");
+ const authenticate = async () => {
+  try {
+   if (!email || !password) {
+    console.log("Invalid Credentials");
+   }
+
+   const response = await api.post("/auth/login", { email, password });
+
+   const token = get(response, "data.token");
+
+   if (token) {
+    localStorage.setItem("token", token);
+
+    const user = get(response, "data.user");
+
+    if (user) {
+     const userId = get(user, "_id");
+     localStorage.setItem("userId", userId);
+     localStorage.setItem("username", get(user, "name"));
+     console.log("chegou ate aqui");
+     navigate("/home");
+    }
+   } else {
+    throw new Error("Authentication failed.");
+   }
+  } catch (error) {
+   throw new Error("Invalid email or password");
+  }
  };
+
  return (
   <div className="h-screen flex items-center justify-center">
    <div className="max-w-3xl w-full px-6 text-center space-y-10">
@@ -22,6 +54,7 @@ export function LoginPage() {
       <input
        type="text"
        placeholder="User"
+       onChange={(event) => setEmail(event.target.value)}
        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
       />
      </div>
@@ -33,11 +66,17 @@ export function LoginPage() {
       <input
        type="password"
        placeholder="Password"
+       onChange={(event) => setPassword(event.target.value)}
        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
       />
      </div>
     </div>
-    <Button size="full" onClick={authenticate}>
+    <Button
+     size="full"
+     onClick={authenticate}
+     disabled={!email || !password}
+     variant={!email || !password ? "disabled" : "primary"}
+    >
      Continue
      <ArrowRight className="size-5" />
     </Button>

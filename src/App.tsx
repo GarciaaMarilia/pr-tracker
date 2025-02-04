@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { HomePage } from "./pages/home/home";
 import { LoginPage } from "./pages/login/login";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const router = createBrowserRouter([
  {
@@ -10,12 +12,16 @@ const router = createBrowserRouter([
  },
  {
   path: "/home",
-  element: <HomePage />,
+  element: <ProtectedRoute element={<HomePage />} />,
  },
 ]);
 
 function App() {
- return <RouterProvider router={router} />;
+ return (
+  <AuthProvider>
+   <RouterProvider router={router} />;
+  </AuthProvider>
+ );
 }
 
 export default App;
