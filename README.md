@@ -2,7 +2,7 @@
 
 ## Description
 
-PR Tracker est une application web permettant de suivre et d'afficher la progression des records personnels (PR) dans différents exercices.
+PR Tracker est une application web permettant de suivre et d'afficher la progression des records personnels (PR) dans différents exercices de CrossFit.
 
 ## Technologies utilisées
 
