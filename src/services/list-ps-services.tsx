@@ -17,6 +17,6 @@ export async function listPr({ type, exercise }: ListPrProps) {
   const response = await api.post("/pr/list", { token, type, exercise });
   return response.data;
  } catch (error) {
-  return error;
+  console.log(error);
  }
 }

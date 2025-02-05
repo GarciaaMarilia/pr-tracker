@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mui/material": "^6.4.2",
     "@tailwindcss/vite": "^4.0.3",
     "@types/lodash": "^4.17.15",
     "axios": "^1.7.9",

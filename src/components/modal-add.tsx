@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 
 import { Button } from "./button";
+import { ModalConfirm } from "./modal-confirm";
 import { PrDataProps, savePr } from "../services/save-pr-service";
 import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/types";
 
@@ -17,15 +18,18 @@ const exerciseMapping = {
 };
 
 export function ModalAdd({ onClose }: ModalAddProps) {
+ const [loading, setLoading] = useState<boolean>(false);
  const [typeToSaveSelected, setTypeToSaveSelected] = useState<Types>();
  const [exerciseToSaveSelected, setExerciseToSaveSelected] = useState<
   Benchmark | Gym | Haltero | Cardio
  >();
  const [valueToSave, setValueToSave] = useState<string>();
  const [dateToSave, setDateToSave] = useState<string>(new Date().toISOString());
+ const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
 
  const handleSavePr = async () => {
   try {
+   setLoading(true);
    if (
     typeToSaveSelected &&
     exerciseToSaveSelected &&
@@ -39,16 +43,19 @@ export function ModalAdd({ onClose }: ModalAddProps) {
      date: dateToSave,
     };
     const response = await savePr(prData);
+    if (response) setModalConfirmIsOpen(true);
     return response;
    }
   } catch (error) {
    console.error(error);
+  } finally {
+   setLoading(false);
   }
  };
 
  const renderExerciseList = () => {
-  const exercises: (Benchmark | Gym | Haltero | Cardio)[] =
-   exerciseMapping[typeToSaveSelected as Types] || [];
+  const exercises =
+   Object.values(exerciseMapping[typeToSaveSelected as Types]) || {};
 
   return (
    <div className="gap-4 mt-4">
@@ -93,7 +100,18 @@ export function ModalAdd({ onClose }: ModalAddProps) {
      </label>
      <input
       id="information"
-      type="text"
+      type={
+       typeToSaveSelected === Types.BENCHMARK ||
+       typeToSaveSelected === Types.CARDIO
+        ? "time"
+        : "text"
+      }
+      step={
+       typeToSaveSelected === Types.BENCHMARK ||
+       typeToSaveSelected === Types.CARDIO
+        ? "1"
+        : undefined
+      }
       className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
       placeholder="Entrez un nom"
       onChange={(event) => setValueToSave(event.target.value)}
@@ -116,9 +134,14 @@ export function ModalAdd({ onClose }: ModalAddProps) {
   );
  };
 
+ const closeConfirmModal = () => {
+  setModalConfirmIsOpen(false);
+  window.document.location.reload();
+ };
+
  return (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-   <div className="w-[60%] sm:h-[50%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
+   <div className="sm:w-[60%] w-[85%] sm:h-[50%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
     <div className="flex flex-row justify-between">
      <h2 className="font-lg text-xl font-semibold ">
       Enregistrer une nouvelle référence
@@ -153,8 +176,17 @@ export function ModalAdd({ onClose }: ModalAddProps) {
     </div>
     {typeToSaveSelected && exerciseToSaveSelected && (
      <div className="flex items-center justify-center pt-5">
-      <Button onClick={handleSavePr}>Enregistrer</Button>
+      <Button onClick={handleSavePr}>
+       {loading ? "Chargement en cours..." : "Enregistrer"}
+      </Button>
      </div>
+    )}
+    {modalConfirmIsOpen && (
+     <ModalConfirm
+      title="Votre performance a été enregistrée avec succès !"
+      onClose={closeConfirmModal}
+
+     />
     )}
    </div>
   </div>

@@ -30,7 +30,6 @@ export function LoginPage() {
      const userId = get(user, "_id");
      localStorage.setItem("userId", userId);
      localStorage.setItem("username", get(user, "name"));
-     console.log("chegou ate aqui");
      navigate("/home");
     }
    } else {
