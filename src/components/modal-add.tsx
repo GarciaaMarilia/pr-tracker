@@ -126,6 +126,7 @@ export function ModalAdd({ onClose }: ModalAddProps) {
       id="date"
       type="date"
       className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
+      max={new Date().toISOString().split("T")[0]}
       defaultValue={new Date().toISOString().split("T")[0]}
       onChange={(event) => setDateToSave(event.target.value)}
      />
