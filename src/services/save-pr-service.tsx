@@ -12,9 +12,16 @@ export async function savePr({ type, exercise, value, date }: PrDataProps) {
  try {
   const token = localStorage.getItem("token");
 
-  if (!token || !type || !exercise || !value || !date) {
+  if (!token) {
+   console.error("UpdatePr error: No authentication token found");
    return;
   }
+
+  if (!type || !exercise || !value || !date) {
+   console.error("UpdatePr error: type, exercise, value and date are required");
+   return;
+  }
+
   const prData = {
    token,
    type,

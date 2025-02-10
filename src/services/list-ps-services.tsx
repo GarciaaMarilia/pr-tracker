@@ -10,7 +10,13 @@ export async function listPr({ type, exercise }: ListPrProps) {
  try {
   const token = localStorage.getItem("token");
 
-  if (!token || !type || !exercise) {
+  if (!token) {
+   console.error("UpdatePr error: No authentication token found");
+   return;
+  }
+
+  if (!type || !exercise) {
+   console.error("UpdatePr error: type and exercise are required");
    return;
   }
 

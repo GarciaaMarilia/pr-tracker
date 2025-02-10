@@ -243,7 +243,9 @@ export function ModalAdd({
     )}
     {modalConfirmIsOpen && (
      <ModalConfirm
-      title="Votre performance a été enregistrée avec succès !"
+      title={`Votre performance a été ${
+       edit ? "modifiée" : "enregistrée"
+      } avec succès !`}
       onClose={closeConfirmModal}
      />
     )}

@@ -11,6 +11,17 @@ export async function UpdatePr({ id, dataPr }: UpdatePrProps) {
   const token = localStorage.getItem("token");
 
   if (!id) {
+   console.error("UpdatePr error: ID is required");
+   return;
+  }
+
+  if (!token) {
+   console.error("UpdatePr error: No authentication token found");
+   return;
+  }
+
+  if (!dataPr.type || !dataPr.exercise || !dataPr.value || !dataPr.date) {
+   console.error("UpdatePr error: Invalid dataPr object", dataPr);
    return;
   }
 
