@@ -37,14 +37,16 @@ export function ModalAdd({
  >();
  const [valueToSave, setValueToSave] = useState<string>();
  const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
- const [dateToSave, setDateToSave] = useState<string>(new Date().toISOString());
+ const [dateToSave, setDateToSave] = useState<string>(
+  new Date().toISOString().split("T")[0]
+ );
 
  useEffect(() => {
   if (dataToEdit && type && exercise) {
    setTypeToSaveSelected(type);
    setExerciseToSaveSelected(exercise);
    setValueToSave(String(dataToEdit.value));
-   setDateToSave(dataToEdit.date);
+   setDateToSave(new Date(dataToEdit.date).toISOString().split("T")[0]);
   }
  }, []);
 
@@ -182,7 +184,6 @@ export function ModalAdd({
       type="date"
       value={dateToSave}
       max={new Date().toISOString().split("T")[0]}
-      defaultValue={new Date().toISOString().split("T")[0]}
       onChange={(event) => setDateToSave(event.target.value)}
       className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
      />

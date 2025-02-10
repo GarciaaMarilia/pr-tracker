@@ -90,7 +90,7 @@ export function HomePage() {
  };
 
  return (
-  <div className="overflow-hidden flex sm:px-40 px-6 py-12 flex-col space-y-10 ">
+  <div className="overflow-hidden flex  px-6 py-12 flex-col space-y-10">
    <div className="flex flex-row justify-between">
     <p className="text-3xl">
      Bienvenue, <p className="text-yellow-600">{username}</p>

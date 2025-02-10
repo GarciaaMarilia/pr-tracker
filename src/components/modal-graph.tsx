@@ -31,7 +31,8 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
 
    return {
     id: id,
-    date: formatDate(date),
+    date: date, 
+    formatedDate: formatDate(date),
     value: value.includes(":") ? timeToSeconds(value) : Number(value),
    };
   });
@@ -60,7 +61,7 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
 
  return (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-   <div className="sm:w-[40%] w-[80%] max-h-[70%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
+   <div className="sm:w-[60%] w-[80%] max-h-[70%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
     <div className="flex flex-row justify-between pb-4">
      <div>
       <h2 className="font-lg text-xl font-semibold">Votre progression</h2>
@@ -99,7 +100,7 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
           key={index}
           className="flex flex-row items-start justify-between py-1"
          >
-          <p className="font-semibold">{data.date}: </p>
+          <p className="font-semibold">{data.formatedDate}: </p>
           {type === Types.BENCHMARK || type === Types.CARDIO
            ? formatTime(data.value)
            : type === Types.HALTERO
