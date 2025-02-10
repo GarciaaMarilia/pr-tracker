@@ -13,6 +13,6 @@ export async function deletePr({ id }: DeletePrProps) {
   const response = await api.delete(`/pr/delete/${id}`);
   return response.data;
  } catch (error) {
-  console.log(error);
+  console.error(error);
  }
 }

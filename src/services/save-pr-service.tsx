@@ -1,5 +1,5 @@
 import { api } from "../lib/axios";
-import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/types";
+import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/enums";
 
 export interface PrDataProps {
  type: Types;
@@ -26,6 +26,6 @@ export async function savePr({ type, exercise, value, date }: PrDataProps) {
   const response = await api.post("/pr/register", prData);
   return response;
  } catch (error) {
-  return error;
+  console.error(error);
  }
 }

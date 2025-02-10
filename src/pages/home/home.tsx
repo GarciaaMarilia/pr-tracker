@@ -2,16 +2,11 @@ import { useState } from "react";
 import { ChartSpline } from "lucide-react";
 
 import { Button } from "../../components/button";
+import { DataToPlotProps } from "../../types/types";
 import { ModalAdd } from "../../components/modal-add";
 import { listPr } from "../../services/list-ps-services";
 import { ModalGraph } from "../../components/modal-graph";
-import { Types, Benchmark, Gym, Haltero, Cardio } from "../../types/types";
-
-export interface DataToPlotProps {
- id: string;
- date: string;
- value: string;
-}
+import { Types, Benchmark, Gym, Haltero, Cardio } from "../../types/enums";
 
 export function HomePage() {
  const [loading, setLoading] = useState<boolean>(false);

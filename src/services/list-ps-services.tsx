@@ -1,5 +1,5 @@
 import { api } from "../lib/axios";
-import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/types";
+import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/enums";
 
 export interface ListPrProps {
  type: Types;
@@ -17,6 +17,6 @@ export async function listPr({ type, exercise }: ListPrProps) {
   const response = await api.post("/pr/list", { token, type, exercise });
   return response.data;
  } catch (error) {
-  console.log(error);
+  console.error(error);
  }
 }

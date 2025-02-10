@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Trash, X } from "lucide-react";
+import { Pen, Trash, X } from "lucide-react";
 import { Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 
+import { ModalAdd } from "./modal-add";
 import { ModalConfirm } from "./modal-confirm";
 import { formatTime } from "../utils/formatTime";
 import { formatDate } from "../utils/formatDate";
-import { DataToPlotProps } from "../pages/home/home";
 import { timeToSeconds } from "../utils/timeToSeconds";
 import { deletePr } from "../services/delete-pr-service";
-import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/types";
+import { DataToEdit, DataToPlotProps } from "../types/types";
+import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/enums";
 
 interface ModalGraphProps {
  data?: DataToPlotProps[];
@@ -18,8 +19,10 @@ interface ModalGraphProps {
 }
 
 export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
- const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState<boolean>(false);
+ const [dataToEdit, setDataToEdit] = useState<DataToEdit>();
  const [idPrToDelete, setIdPrToDelete] = useState<string>();
+ const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState<boolean>(false);
+ const [modalUpdateIsOpen, setModalUpdateIsOpen] = useState<boolean>(false);
 
  const formattedData =
   data &&
@@ -41,13 +44,18 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
     return response;
    }
   } catch (error) {
-   console.log(error);
+   console.error(error);
   }
  };
 
  const handleDeletePr = (id: string) => {
   setIdPrToDelete(id);
   setModalDeleteIsOpen(true);
+ };
+
+ const handleUpdatePr = (dataToEdit: DataToEdit) => {
+  setDataToEdit(dataToEdit);
+  setModalUpdateIsOpen(true);
  };
 
  return (
@@ -80,7 +88,7 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
          }}
         />
         <Tooltip />
-        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+        <Line type="monotone" dataKey="value" stroke="orange" />
        </LineChart>
       </div>
 
@@ -97,9 +105,14 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
            : type === Types.HALTERO
            ? `${data.value} kg`
            : `${data.value} reps`}
-          <button onClick={() => handleDeletePr(data.id)}>
-           <Trash className="size-5" />
-          </button>
+          <div className="flex gap-3">
+           <button onClick={() => handleUpdatePr(data)}>
+            <Pen className="size-4" />
+           </button>
+           <button onClick={() => handleDeletePr(data.id)}>
+            <Trash className="size-4" />
+           </button>
+          </div>
          </div>
         );
        })}
@@ -116,6 +129,15 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
       title="Confirmez-vous la suppression de ce PR ?"
       onClose={() => setModalDeleteIsOpen(false)}
       onDelete={() => deletePR(idPrToDelete)}
+     />
+    )}
+    {modalUpdateIsOpen && (
+     <ModalAdd
+      edit
+      type={type}
+      exercise={exercise}
+      dataToEdit={dataToEdit}
+      onClose={() => setModalUpdateIsOpen(false)}
      />
     )}
    </div>
