@@ -44,7 +44,9 @@ export function LoginPage() {
   <div className="h-screen flex items-center justify-center">
    <div className="max-w-3xl w-full px-6 text-center space-y-10">
     <div className="flex flex-col items-center gap-3">
-     <p className="text-4xl">Bienvenue sur PR Tracker</p>
+     <p className="flex flex-row text-4xl gap-2">
+      Bienvenue sur <p className="text-yellow-600"> PR Tracker</p>
+     </p>
     </div>
 
     <div className="h-16 px-4 rounded-xl flex items-center shadow-shape gap-3">
@@ -52,7 +54,7 @@ export function LoginPage() {
       <User className="size-5" />
       <input
        type="text"
-       placeholder="User"
+       placeholder="Adresse email"
        onChange={(event) => setEmail(event.target.value)}
        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
       />
@@ -64,7 +66,7 @@ export function LoginPage() {
       <KeyRound className="size-5" />
       <input
        type="password"
-       placeholder="Password"
+       placeholder="Mot de passe"
        onChange={(event) => setPassword(event.target.value)}
        className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
       />
@@ -76,7 +78,7 @@ export function LoginPage() {
      disabled={!email || !password}
      variant={!email || !password ? "disabled" : "primary"}
     >
-     Continue
+     Se conecter
      <ArrowRight className="size-5" />
     </Button>
    </div>

@@ -2,16 +2,11 @@ import { useState } from "react";
 import { ChartSpline } from "lucide-react";
 
 import { Button } from "../../components/button";
+import { DataToPlotProps } from "../../types/types";
 import { ModalAdd } from "../../components/modal-add";
 import { listPr } from "../../services/list-ps-services";
 import { ModalGraph } from "../../components/modal-graph";
-import { Types, Benchmark, Gym, Haltero, Cardio } from "../../types/types";
-
-export interface DataToPlotProps {
- id: string;
- date: string;
- value: string;
-}
+import { Types, Benchmark, Gym, Haltero, Cardio } from "../../types/enums";
 
 export function HomePage() {
  const [loading, setLoading] = useState<boolean>(false);
@@ -95,7 +90,7 @@ export function HomePage() {
  };
 
  return (
-  <div className="overflow-hidden flex sm:px-40 px-6 py-12 flex-col space-y-10 ">
+  <div className="overflow-hidden flex  px-6 py-12 flex-col space-y-10">
    <div className="flex flex-row justify-between">
     <p className="text-3xl">
      Bienvenue, <p className="text-yellow-600">{username}</p>

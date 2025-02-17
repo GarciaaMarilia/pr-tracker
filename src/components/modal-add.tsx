@@ -1,13 +1,19 @@
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Save, X } from "lucide-react";
 
 import { Button } from "./button";
+import { DataToEdit } from "../types/types";
 import { ModalConfirm } from "./modal-confirm";
+import { UpdatePr } from "../services/update-pr-service";
 import { PrDataProps, savePr } from "../services/save-pr-service";
-import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/types";
+import { Benchmark, Cardio, Gym, Haltero, Types } from "../types/enums";
 
 interface ModalAddProps {
  onClose: () => void;
+ edit?: boolean;
+ dataToEdit?: DataToEdit;
+ type?: Types;
+ exercise?: Benchmark | Gym | Haltero | Cardio;
 }
 
 const exerciseMapping = {
@@ -17,15 +23,32 @@ const exerciseMapping = {
  [Types.CARDIO]: Cardio,
 };
 
-export function ModalAdd({ onClose }: ModalAddProps) {
+export function ModalAdd({
+ onClose,
+ edit,
+ dataToEdit,
+ type,
+ exercise,
+}: ModalAddProps) {
  const [loading, setLoading] = useState<boolean>(false);
  const [typeToSaveSelected, setTypeToSaveSelected] = useState<Types>();
  const [exerciseToSaveSelected, setExerciseToSaveSelected] = useState<
   Benchmark | Gym | Haltero | Cardio
  >();
  const [valueToSave, setValueToSave] = useState<string>();
- const [dateToSave, setDateToSave] = useState<string>(new Date().toISOString());
  const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
+ const [dateToSave, setDateToSave] = useState<string>(
+  new Date().toISOString().split("T")[0]
+ );
+
+ useEffect(() => {
+  if (dataToEdit && type && exercise) {
+   setTypeToSaveSelected(type);
+   setExerciseToSaveSelected(exercise);
+   setValueToSave(String(dataToEdit.value));
+   setDateToSave(new Date(dataToEdit.date).toISOString().split("T")[0]);
+  }
+ }, []);
 
  const handleSavePr = async () => {
   try {
@@ -53,6 +76,37 @@ export function ModalAdd({ onClose }: ModalAddProps) {
   }
  };
 
+ const handleUpdatePr = async () => {
+  try {
+   setLoading(true);
+   if (
+    dataToEdit &&
+    typeToSaveSelected &&
+    exerciseToSaveSelected &&
+    valueToSave
+   ) {
+    const id = dataToEdit.id;
+
+    const dataPr: PrDataProps = {
+     type: typeToSaveSelected,
+     exercise: exerciseToSaveSelected,
+     value: valueToSave,
+     date: dateToSave,
+    };
+
+    const response = await UpdatePr({ id, dataPr });
+
+    if (response) setModalConfirmIsOpen(true);
+
+    return response;
+   }
+  } catch (error) {
+   console.error(error);
+  } finally {
+   setLoading(false);
+  }
+ };
+
  const renderExerciseList = () => {
   const exercises =
    Object.values(exerciseMapping[typeToSaveSelected as Types]) || {};
@@ -65,10 +119,12 @@ export function ModalAdd({ onClose }: ModalAddProps) {
     <select
      id="exercises"
      name="exercises"
-     className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
+     disabled={edit}
+     value={exercise}
      onChange={(e) =>
       setExerciseToSaveSelected(e.target.value as Benchmark | Gym | Haltero)
      }
+     className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
     >
      <option value="" disabled selected>
       Veuillez choisir un exercise
@@ -112,9 +168,10 @@ export function ModalAdd({ onClose }: ModalAddProps) {
         ? "1"
         : undefined
       }
-      className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
+      value={valueToSave}
       placeholder="Entrez un nom"
       onChange={(event) => setValueToSave(event.target.value)}
+      className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
      />
     </div>
 
@@ -125,10 +182,10 @@ export function ModalAdd({ onClose }: ModalAddProps) {
      <input
       id="date"
       type="date"
-      className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
+      value={dateToSave}
       max={new Date().toISOString().split("T")[0]}
-      defaultValue={new Date().toISOString().split("T")[0]}
       onChange={(event) => setDateToSave(event.target.value)}
+      className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
      />
     </div>
    </div>
@@ -145,7 +202,7 @@ export function ModalAdd({ onClose }: ModalAddProps) {
    <div className="sm:w-[60%] w-[85%] sm:h-[50%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
     <div className="flex flex-row justify-between">
      <h2 className="font-lg text-xl font-semibold ">
-      Enregistrer une nouvelle référence
+      {edit ? "Edit une référence" : "Enregistrer une nouvelle référence"}
      </h2>
      <button>
       <X onClick={onClose} />
@@ -158,8 +215,10 @@ export function ModalAdd({ onClose }: ModalAddProps) {
      <select
       id="type"
       name="type"
-      className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md"
+      value={type}
+      disabled={edit}
       onChange={(e) => setTypeToSaveSelected(e.target.value as Types)}
+      className="w-full mt-2 px-4 py-2 bg-zinc-800 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
      >
       <option value="" disabled selected>
        Veuillez choisir un type
@@ -177,16 +236,18 @@ export function ModalAdd({ onClose }: ModalAddProps) {
     </div>
     {typeToSaveSelected && exerciseToSaveSelected && (
      <div className="flex items-center justify-center pt-5">
-      <Button onClick={handleSavePr}>
-       {loading ? "Chargement en cours..." : "Enregistrer"}
+      <Button onClick={edit ? handleUpdatePr : handleSavePr}>
+       {!loading && <Save />}
+       {loading ? "Chargement en cours..." : edit ? "Modifier" : "Enregistrer"}
       </Button>
      </div>
     )}
     {modalConfirmIsOpen && (
      <ModalConfirm
-      title="Votre performance a été enregistrée avec succès !"
+      title={`Votre performance a été ${
+       edit ? "modifiée" : "enregistrée"
+      } avec succès !`}
       onClose={closeConfirmModal}
-
      />
     )}
    </div>
