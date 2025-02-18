@@ -1,6 +1,6 @@
 export type DataToEdit = {
  id: string;
- formatedDate: string;
+ formattedDate: string;
  date: string;
  value: number;
 };

@@ -42,14 +42,14 @@ export function LoginPage() {
 
  return (
   <div className="h-screen flex items-center justify-center">
-   <div className="max-w-3xl w-full px-6 text-center space-y-10">
+   <div className="max-w-3xl w-full px-6 text-center space-y-10 bg-pattern bg-no-repeat bg-center">
     <div className="flex flex-col items-center gap-3">
      <p className="flex flex-row text-4xl gap-2">
       Bienvenue sur <p className="text-yellow-600"> PR Tracker</p>
      </p>
     </div>
 
-    <div className="h-16 px-4 rounded-xl flex items-center shadow-shape gap-3">
+    <div className="h-16 px-4 rounded-xl flex items-center shadow-shape gap-3 border">
      <div className="flex items-center gap-2">
       <User className="size-5" />
       <input
@@ -61,7 +61,7 @@ export function LoginPage() {
      </div>
     </div>
 
-    <div className="h-16 px-4 rounded-xl flex items-center shadow-shape gap-3">
+    <div className="h-16 px-4 rounded-xl flex items-center shadow-shape gap-3 border">
      <div className="flex items-center gap-2">
       <KeyRound className="size-5" />
       <input
