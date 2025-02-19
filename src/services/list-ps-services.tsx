@@ -20,7 +20,15 @@ export async function listPr({ type, exercise }: ListPrProps) {
    return;
   }
 
-  const response = await api.post("/pr/list", { token, type, exercise });
+  const response = await api.post(
+   "/pr/list",
+   { type, exercise },
+   {
+    headers: {
+     Authorization: `Bearer ${token}`,
+    },
+   }
+  );
   return response.data;
  } catch (error) {
   console.error(error);

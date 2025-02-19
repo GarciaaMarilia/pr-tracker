@@ -10,7 +10,13 @@ export async function deletePr({ id }: DeletePrProps) {
    return;
   }
 
-  const response = await api.delete(`/pr/delete/${id}`);
+  const token = localStorage.getItem("token");
+
+  const response = await api.delete(`/pr/delete/${id}`, {
+   headers: {
+    Authorization: `Bearer ${token}`,
+   },
+  });
   return response.data;
  } catch (error) {
   console.error(error);

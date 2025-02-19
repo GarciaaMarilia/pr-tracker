@@ -22,15 +22,16 @@ export async function savePr({ type, exercise, value, date }: PrDataProps) {
    return;
   }
 
-  const prData = {
-   token,
+  const prData: PrDataProps = {
    type,
    exercise,
    value,
    date,
   };
 
-  const response = await api.post("/pr/register", prData);
+  const response = await api.post("/pr/register", prData, {
+   headers: { Authorization: `Bearer ${token}` },
+  });
   return response;
  } catch (error) {
   console.error(error);

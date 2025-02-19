@@ -7,7 +7,7 @@ const buttonVariants = tv({
 
  variants: {
   variant: {
-   primary: "bg-yellow-600 text-zinc-900 hover:bg-yellow-700",
+   primary: "bg-orange-400 text-zinc-900 hover:bg-yellow-700",
    secondary: "bg-zinc-800 text-zinc-200 hover:bg-zinc-700",
    list:
     "sm:h-16 rounded-xl flex shadow-shape justify-center border border-width-1",
@@ -15,13 +15,8 @@ const buttonVariants = tv({
     "bg-rose-800 hover:bg-rose-900 rounded-xl flex shadow-shape gap-3 justify-center",
    disabled: "bg-zinc-800 text-zinc-200",
   },
-
-  size: {
-   default: "sm:w-[240px] w-[160px]",
-   full: "w-full",
-  },
   active: {
-   true: "bg-yellow-600 text-zinc-900",
+   true: "bg-orange-400 text-zinc-900",
    false: "",
   },
  },
@@ -42,12 +37,11 @@ interface ButtonProps
 export function Button({
  children,
  variant,
- size,
  active = false,
  ...rest
 }: ButtonProps) {
  return (
-  <button {...rest} className={buttonVariants({ variant, size, active })}>
+  <button {...rest} className={buttonVariants({ variant, active })}>
    {children}
   </button>
  );

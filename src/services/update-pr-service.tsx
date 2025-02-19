@@ -25,12 +25,13 @@ export async function UpdatePr({ id, dataPr }: UpdatePrProps) {
    return;
   }
 
-  const newData = {
-   token,
+  const newData: PrDataProps = {
    ...dataPr,
   };
 
-  const result = await api.put(`/pr/update/${id}`, newData);
+  const result = await api.put(`/pr/update/${id}`, newData, {
+   headers: { Authorization: `Bearer ${token}` },
+  });
   return result;
  } catch (error) {
   console.error(error);

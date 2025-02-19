@@ -199,7 +199,7 @@ export function ModalAdd({
 
  return (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-   <div className="sm:w-[60%] w-[85%] sm:h-[45%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
+   <div className="sm:w-[60%] w-[85%] sm:h-[50%] rounded-xl py-8 px-8 shadow-shape bg-zinc-900 space-y-5">
     <div className="flex flex-row justify-between">
      <h2 className="font-lg text-xl font-semibold ">
       {edit ? "Edit une référence" : "Enregistrer une nouvelle référence"}

@@ -1,51 +1,23 @@
-import { get } from "lodash";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, KeyRound, User } from "lucide-react";
 
-import { api } from "../../lib/axios";
 import { Button } from "../../components/button";
+import { useAuth } from "../../contexts/AuthContext";
 
 export function LoginPage() {
+ const { login } = useAuth();
  const navigate = useNavigate();
  const [email, setEmail] = useState<string>("");
  const [password, setPassword] = useState<string>("");
 
- const authenticate = async () => {
-  try {
-   if (!email || !password) {
-    console.log("Invalid Credentials");
-   }
-
-   const response = await api.post("/auth/login", { email, password });
-
-   const token = get(response, "data.token");
-
-   if (token) {
-    localStorage.setItem("token", token);
-
-    const user = get(response, "data.user");
-
-    if (user) {
-     const userId = get(user, "_id");
-     localStorage.setItem("userId", userId);
-     localStorage.setItem("username", get(user, "name"));
-     navigate("/home");
-    }
-   } else {
-    throw new Error("Authentication failed.");
-   }
-  } catch (error) {
-   throw new Error("Invalid email or password");
-  }
- };
-
  return (
-  <div className="h-screen flex items-center justify-center">
-   <div className="max-w-3xl w-full px-6 text-center space-y-10 bg-pattern bg-no-repeat bg-center">
+  <div className="h-screen flex items-center justify-center bg-pattern bg-no-repeat bg-center">
+   <div className="flex flex-col max-w-3xl w-full px-6 items-center space-y-10 ">
+    <img src="../../public/login-animation.gif" alt="animation" />
     <div className="flex flex-col items-center gap-3">
-     <p className="flex flex-row text-4xl gap-2">
-      Bienvenue sur <p className="text-yellow-600"> PR Tracker</p>
+     <p className="flex flex-row sm:text-4xl text-3xl gap-2">
+      Bienvenue sur <p className="text-orange-400"> PR Tracker</p>
      </p>
     </div>
 
@@ -72,15 +44,16 @@ export function LoginPage() {
       />
      </div>
     </div>
-    <Button
-     size="full"
-     onClick={authenticate}
-     disabled={!email || !password}
-     variant={!email || !password ? "disabled" : "primary"}
-    >
-     Se conecter
-     <ArrowRight className="size-5" />
-    </Button>
+    <div className="flex items-center">
+     <Button
+      disabled={!email || !password}
+      onClick={() => login(email, password, navigate)}
+      variant={!email || !password ? "disabled" : "primary"}
+     >
+      Se conecter
+      <ArrowRight className="size-5" />
+     </Button>
+    </div>
    </div>
   </div>
  );

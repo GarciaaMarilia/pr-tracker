@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React from "react";
+import {
+ createBrowserRouter,
+ RouterProvider,
+} from "react-router-dom";
 
 import { HomePage } from "./pages/home/home";
 import { LoginPage } from "./pages/login/login";
@@ -18,9 +22,11 @@ const router = createBrowserRouter([
 
 function App() {
  return (
-  <AuthProvider>
-   <RouterProvider router={router} />;
-  </AuthProvider>
+  <React.StrictMode>
+   <AuthProvider>
+    <RouterProvider router={router} />
+   </AuthProvider>
+  </React.StrictMode>
  );
 }
 
