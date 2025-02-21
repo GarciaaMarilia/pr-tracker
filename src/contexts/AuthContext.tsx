@@ -73,12 +73,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
  };
 
  useEffect(() => {
-  if (typeof window !== "undefined") {
-   const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-   if (token) {
-    setIsAuthenticated(true);
-   }
+  if (token) {
+   setIsAuthenticated(true);
   }
  }, []);
 

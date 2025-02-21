@@ -127,9 +127,10 @@ export function ModalGraph({ data, onClose, exercise, type }: ModalGraphProps) {
     {modalDeleteIsOpen && idPrToDelete && (
      <ModalConfirm
       danger
+      buttonTitle="Suprimer"
       title="Confirmez-vous la suppression de ce PR ?"
       onClose={() => setModalDeleteIsOpen(false)}
-      onDelete={() => deletePR(idPrToDelete)}
+      onConfirm={() => deletePR(idPrToDelete)}
      />
     )}
     {modalUpdateIsOpen && (

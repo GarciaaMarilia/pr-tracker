@@ -9,6 +9,7 @@ import { ModalAdd } from "../../components/modal-add";
 import { listPr } from "../../services/list-ps-services";
 import { ModalGraph } from "../../components/modal-graph";
 import { Types, Benchmark, Gym, Haltero, Cardio } from "../../types/enums";
+import { ModalConfirm } from "../../components/modal-confirm";
 
 export function HomePage() {
  const { logout } = useAuth();
@@ -16,6 +17,7 @@ export function HomePage() {
  const [loading, setLoading] = useState<boolean>(false);
  const [typeToListSelected, setTypeToListSelected] = useState<Types>();
  const [modalToSaveIsOpen, setModalToSaveIsOpen] = useState<boolean>(false);
+ const [modalToLogOutIsOpen, setModalToLogOutIsOpen] = useState<boolean>(false);
  const [exerciseSelected, setExerciseSelected] = useState<
   Benchmark | Gym | Haltero | Cardio
  >();
@@ -31,6 +33,10 @@ export function HomePage() {
 
  const handleModalToSave = () => {
   setModalToSaveIsOpen((prev) => !prev);
+ };
+
+ const handleModalToLogOut = () => {
+  setModalToLogOutIsOpen((prev) => !prev);
  };
 
  const closeModalProgression = () => {
@@ -69,7 +75,7 @@ export function HomePage() {
   );
 
   return (
-   <div className="flex flex-col space-y-3 sm:w-[400px] w-[300px] max-h-[400px] overflow-y-scroll no-scrollbar">
+   <div className="flex flex-col space-y-3 w-[75%] max-h-[400px] overflow-y-scroll no-scrollbar">
     {Object.values(exercises).map(
      (exercise: Benchmark | Gym | Haltero | Cardio, index: number) => {
       return (
@@ -107,15 +113,14 @@ export function HomePage() {
       </>
      </Button>
      <button>
-      <LogOut className="size-8" onClick={() => logout(navigate)} />
+      <LogOut className="size-8" onClick={handleModalToLogOut} />
      </button>
     </div>
    </div>
 
-
    <div className="flex flex-col items-center space-y-10">
     <h1 className="text-2xl font-semibold">Vos références</h1>
-    <div className="flex flex-row gap-3 max-w-sm sm:max-w-none">
+    <div className="flex flex-row gap-3 justify-between w-[80%] lg:px-6">
      <Button
       variant="list"
       onClick={() => selectType(Types.HALTERO)}
@@ -155,13 +160,22 @@ export function HomePage() {
     {typeToListSelected && renderExerciseList()}
    </div>
    {modalToSaveIsOpen && <ModalAdd onClose={handleModalToSave} />}
- 
+
    {modalProgressionIsOpen && typeToListSelected && exerciseSelected && (
     <ModalGraph
      data={dataToPlot}
      type={typeToListSelected}
      exercise={exerciseSelected}
      onClose={closeModalProgression}
+    />
+   )}
+   {modalToLogOutIsOpen && (
+    <ModalConfirm
+     danger
+     buttonTitle="Déconnecter"
+     onClose={handleModalToLogOut}
+     onConfirm={() => logout(navigate)}
+     title="Êtes-vous sûr(e) de vouloir vous déconnecter ?"
     />
    )}
   </div>

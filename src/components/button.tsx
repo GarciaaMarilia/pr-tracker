@@ -10,7 +10,7 @@ const buttonVariants = tv({
    primary: "bg-orange-400 text-zinc-900 hover:bg-yellow-700",
    secondary: "bg-zinc-800 text-zinc-200 hover:bg-zinc-700",
    list:
-    "sm:h-16 rounded-xl flex shadow-shape justify-center border border-width-1",
+    "sm:h-16 w-full rounded-xl flex shadow-shape justify-center border border-width-1",
    danger:
     "bg-rose-800 hover:bg-rose-900 rounded-xl flex shadow-shape gap-3 justify-center",
    disabled: "bg-zinc-800 text-zinc-200",

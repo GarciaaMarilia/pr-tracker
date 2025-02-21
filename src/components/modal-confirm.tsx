@@ -4,15 +4,17 @@ import { Button } from "./button";
 interface ModalConfirmProps {
  title: string;
  danger?: boolean;
+ buttonTitle: string;
  onClose: () => void;
- onDelete?: () => void;
+ onConfirm?: () => void;
 }
 
 export function ModalConfirm({
  title,
  danger,
  onClose,
- onDelete,
+ onConfirm,
+ buttonTitle,
 }: ModalConfirmProps) {
  return (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
@@ -25,9 +27,9 @@ export function ModalConfirm({
     </div>
     {danger && (
      <div className="flex items-center justify-center">
-      <Button variant="danger" onClick={onDelete}>
+      <Button variant="danger" onClick={onConfirm}>
        {" "}
-       Suprimer{" "}
+       {buttonTitle}{" "}
       </Button>
      </div>
     )}
